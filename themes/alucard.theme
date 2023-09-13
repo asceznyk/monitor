@@ -1,0 +1,89 @@
+#alucard theme
+#by asceznyk
+
+# colors should be in 6 or 2 character hexadecimal or single spaced rgb decimal: "#rrggbb", "#bw" or "0-255 0-255 0-255"
+# example for white: "#ffffff", "#ff" or "255 255 255".
+
+# all graphs and meters can be gradients
+# for single color graphs leave "mid" and "end" variable empty.
+# use "start" and "end" variables for two color gradient
+# use "start", "mid" and "end" for three color gradient
+
+# main background, empty for terminal default, need to be empty if you want transparent background
+theme[main_bg]="#1e1b1d"
+
+# main text color
+theme[main_fg]="#839496"
+
+# title color for boxes
+theme[title]="#839496"
+
+# higlight color for keyboard shortcuts
+theme[hi_fg]="#6272a4"
+
+# background color of selected item in processes box
+theme[selected_bg]="#1e1b1d"
+
+# foreground color of selected item in processes box
+theme[selected_fg]="#839496"
+
+# color of inactive/disabled text
+theme[inactive_fg]="#44475a"
+
+# misc colors for processes box including mini cpu graphs, details memory graph and details status text
+theme[proc_misc]="#50fa7b"
+
+# cpu box outline color
+theme[cpu_box]="#bd93f9"
+
+# memory/disks box outline color
+theme[mem_box]="#bd93f9"
+
+# net up/down box outline color
+theme[net_box]="#bd93f9"
+
+# processes box outline color
+theme[proc_box]="#bd93f9"
+
+# box divider line and small boxes line color
+theme[div_line]="#44475a"
+
+# temperature graph colors
+theme[temp_start]="#bd93f9"
+theme[temp_mid]="#ff5555"
+theme[temp_end]="#efa554"
+
+# cpu graph colors
+theme[cpu_start]="#6272a4"
+theme[cpu_mid]="#ff5555"
+theme[cpu_end]="#efa554"
+
+# mem/disk free meter
+theme[free_start]="#50fa7b"
+theme[free_mid]="#9b6bdf"
+theme[free_end]="#44475a"
+
+# mem/disk cached meter
+theme[cached_start]="#9b6bdf"
+theme[cached_mid]="#e64747"
+theme[cached_end]="#50fa7b"
+
+# mem/disk available meter
+theme[available_start]="#50fa7b"
+theme[available_mid]="#9b6bdf"
+theme[available_end]="#44475a"
+
+# mem/disk used meter
+theme[used_start]="#44475a"
+theme[used_mid]="#9b6bdf"
+theme[used_end]="#50fa7b"
+
+# download graph colors
+theme[download_start]="#bd93f9"
+theme[download_mid]="#9b6bdf"
+theme[download_end]="#50fa7b"
+
+# upload graph colors
+theme[upload_start]="#bd93f9"
+theme[upload_mid]="#9b6bdf"
+theme[upload_end]="#50fa7b"
