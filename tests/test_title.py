@@ -1,4 +1,4 @@
-from bpytop import Term
+from warden import Term
 import os
 from unittest import mock
 
