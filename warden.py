@@ -81,7 +81,7 @@ BANNER_SRC: List[Tuple[str, str, str]] = [
   ("#db8b00", "#00a6c7", " ╚██╗████╗██╔╝███████║██████╔╝██║  ██║█████╗  ██╔██╗██║"),
   ("#c27b00", "#008ca8", "  ████╔═████║ ██╔══██║██╔══██╗██║  ██║██╔══╝  ██║╚████║"),
   ("#a86b00", "#006e85", "  ╚██╔╝ ╚██╔╝ ██║  ██║██║  ██║██████╔╝███████╗██║ ╚███║"),
-  ("#000000", "#000000", "   ╚═╝   ╚═╝  ╚═╝  ╚═╝╚═╝  ╚═╝╚═════╝ ╚══════╝╚═╝  ╚══╝"),
+  ("#ff0000", "#ff0000", "   ╚═╝   ╚═╝  ╚═╝  ╚═╝╚═╝  ╚═╝╚═════╝ ╚══════╝╚═╝  ╚══╝"),
 ]
 
 #*?This is the template used to create the config file
@@ -232,7 +232,7 @@ show_battery=$show_battery
 #* Show init screen at startup, the init screen is purely cosmetical
 show_init=$show_init
 
-#* Enable check for new version from github.com/aristocratos/warden at start.
+#* Enable check for new version from github.com/asceznyk/warden at start.
 update_check=$update_check
 
 #* Set loglevel for "~/.config/warden/error.log" levels are: "ERROR" "WARNING" "INFO" "DEBUG".
@@ -1391,7 +1391,7 @@ class Banner:
       line_dark = Color.fg(f'#{80 - num * 6}')
       for n, letter in enumerate(line):
         if letter == "█" and c_color != line_color:
-          if 5 < n < 25: c_color = line_color2
+          if 0 < n < 30: c_color = line_color2
           else: c_color = line_color
           out_var += c_color
         elif letter == " ":
@@ -1404,7 +1404,7 @@ class Banner:
       out.append(out_var)
 
   @classmethod
-  def draw(cls, line: int, col: int = 0, center: bool = False, now: bool = False):
+  def draw(cls, line: int, col: int = 0, center: bool = True, now: bool = False):
     out: str = ""
     if center: col = Term.width // 2 - cls.length // 2
     for n, o in enumerate(cls.out):
@@ -4031,10 +4031,10 @@ class Menu:
     while not cls.close:
       key = ""
       if cls.resized:
-        banner = (f'{Banner.draw(Term.height // 2 - 10, center=True)}{Mv.d(1)}{Mv.l(46)}{Colors.black_bg}{Colors.default}{Fx.b}← esc'
-          f'{Mv.r(30)}{Fx.i}Version: {VERSION}{Fx.ui}{Fx.ub}{Term.bg}{Term.fg}')
+        banner = (f'{Banner.draw(Term.height // 2 - 10, center=True)}{Mv.d(1)}{Mv.l(54)}{Colors.default}{Fx.b}← esc'
+          f'{Mv.r(34)}{Fx.i}Version: {VERSION}{Fx.ui}{Fx.ub}{Term.bg}{Term.fg}')
         if UpdateChecker.version != VERSION:
-          banner += f'{Mv.to(Term.height, 1)}{Fx.b}{THEME.title}New release {UpdateChecker.version} available at https://github.com/aristocratos/warden{Fx.ub}{Term.fg}'
+          banner += f'{Mv.to(Term.height, 1)}{Fx.b}{THEME.title}New release {UpdateChecker.version} available at https://github.com/asceznyk/warden{Fx.ub}{Term.fg}'
         cy = 0
         for name, menu in cls.menus.items():
           ypos = Term.height // 2 - 2 + cy
@@ -4167,15 +4167,15 @@ class Menu:
       "Selected (shift+i)" : "Interrupt selected process with SIGINT - 2.",
       "_1" : " ",
       "_2" : "For bug reporting and project updates, visit:",
-      "_3" : "https://github.com/aristocratos/warden",
+      "_3" : "https://github.com/asceznyk/warden",
     }
 
     while not cls.close:
       key = ""
       if cls.resized:
         y = 8 if Term.height < len(help_items) + 10 else Term.height // 2 - len(help_items) // 2 + 4
-        out_misc = (f'{Banner.draw(y-7, center=True)}{Mv.d(1)}{Mv.l(46)}{Colors.black_bg}{Colors.default}{Fx.b}← esc'
-          f'{Mv.r(30)}{Fx.i}Version: {VERSION}{Fx.ui}{Fx.ub}{Term.bg}{Term.fg}')
+        out_misc = (f'{Banner.draw(Term.height // 2 - 10, center=True)}{Mv.d(1)}{Mv.l(54)}{Colors.default}{Fx.b}← esc'
+          f'{Mv.r(34)}{Fx.i}Version: {VERSION}{Fx.ui}{Fx.ub}{Term.bg}{Term.fg}')
         x = Term.width//2-36
         h, w = Term.height-2-y, 72
         if len(help_items) > h:
@@ -4291,7 +4291,7 @@ class Menu:
           'User themes are prefixed by a plus sign "+".',
           '',
           'For theme updates see:',
-          'https://github.com/aristocratos/warden'],
+          'https://github.com/asceznyk/warden'],
         "theme_background" : [
           'If the theme set background should be shown.',
           '',
@@ -4361,7 +4361,7 @@ class Menu:
           'Check for updates at start.',
           '',
           'Checks for latest version from:',
-          'https://github.com/aristocratos/warden'],
+          'https://github.com/asceznyk/warden'],
         "log_level" : [
           'Set loglevel for error.log',
           '',
@@ -4650,8 +4650,8 @@ class Menu:
         option_items = categories[cat_list[cat_int]]
         option_len: int = len(option_items) * 2
         y = 12 if Term.height < max_opt_len + 13 else Term.height // 2 - max_opt_len // 2 + 7
-        out_misc = (f'{Banner.draw(y-10, center=True)}{Mv.d(1)}{Mv.l(46)}{Colors.black_bg}{Colors.default}{Fx.b}← esc'
-          f'{Mv.r(30)}{Fx.i}Version: {VERSION}{Fx.ui}{Fx.ub}{Term.bg}{Term.fg}')
+        out_misc = (f'{Banner.draw(Term.height // 2 - 10, center=True)}{Mv.d(1)}{Mv.l(54)}{Colors.default}{Fx.b}← esc'
+          f'{Mv.r(34)}{Fx.i}Version: {VERSION}{Fx.ui}{Fx.ub}{Term.bg}{Term.fg}')
         x = Term.width//2-38
         x2 = x + 27
         h, w, w2 = min(Term.height-1-y, option_len), 26, 50
@@ -5026,7 +5026,7 @@ class UpdateChecker:
   @classmethod
   def _checker(cls):
     try:
-      with urllib.request.urlopen("https://github.com/aristocratos/warden/raw/master/warden.py", timeout=5) as source: # type: ignore
+      with urllib.request.urlopen("https://github.com/asceznyk/warden/raw/master/warden.py", timeout=5) as source: # type: ignore
         for line in source:
           line = line.decode("utf-8")
           if line.startswith("VERSION: str ="):
@@ -5037,8 +5037,8 @@ class UpdateChecker:
     else:
       if cls.version != VERSION and which("notify-send"):
         try:
-          subprocess.run(["notify-send", "-u", "normal", "BpyTop Update!",
-            f'New version of BpyTop available!\nCurrent version: {VERSION}\nNew version: {cls.version}\nDownload at github.com/aristocratos/warden',
+          subprocess.run(["notify-send", "-u", "normal", "warden Update!",
+            f'New version of warden available!\nCurrent version: {VERSION}\nNew version: {cls.version}\nDownload at github.com/asceznyk/warden',
             "-i", "update-notifier", "-t", "10000"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
         except Exception as e:
           errlog.exception(f'{e}')
@@ -5235,7 +5235,7 @@ def now_sleeping(signum, frame):
 
 def now_awake(signum, frame):
   """Set terminal settings and restart background input read"""
-  Draw.now(Term.alt_screen, Term.clear, Term.hide_cursor, Term.mouse_on, Term.title("BpyTOP"))
+  Draw.now(Term.alt_screen, Term.clear, Term.hide_cursor, Term.mouse_on, Term.title("warden"))
   Term.echo(False)
   Key.start()
   Term.refresh()
@@ -5264,7 +5264,7 @@ def clean_quit(errcode: int = 0, errmsg: str = "", thread: bool = False):
     errlog.info(f'Exiting. Runtime {timedelta(seconds=round(time() - SELF_START, 0))} \n')
   else:
     errlog.warning(f'Exiting with errorcode ({errcode}). Runtime {timedelta(seconds=round(time() - SELF_START, 0))} \n')
-    if not errmsg: errmsg = f'Bpytop exited with errorcode ({errcode}). See {CONFIG_DIR}/error.log for more information!'
+    if not errmsg: errmsg = f'warden exited with errorcode ({errcode}). See {CONFIG_DIR}/error.log for more information!'
   if errmsg: print(errmsg)
 
   raise SystemExit(errcode)
@@ -5563,7 +5563,7 @@ def main():
   if DEBUG: TimeIt.start("Init")
 
   #? Switch to alternate screen, clear screen, hide cursor, enable mouse reporting and disable input echo
-  Draw.now(Term.alt_screen, Term.clear, Term.hide_cursor, Term.mouse_on, Term.title("BpyTOP"))
+  Draw.now(Term.alt_screen, Term.clear, Term.hide_cursor, Term.mouse_on, Term.title("Warden"))
   Term.echo(False)
   #Term.refresh(force=True)
 

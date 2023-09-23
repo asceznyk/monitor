@@ -34,7 +34,7 @@ def test_Meter():
   assert Fx.uncolor(str(test_meter)) == "■■■■■■■■■■■■■■■■■■■■"
 
 def test_Banner():
-  assert len(Banner.draw(line=1, col=1, center=False, now=False)) == 3118
+  assert len(Banner.draw(line=1, col=1, center=False, now=False)) == 3410
 
 def test_CpuCollector_collect():
   warden.CONFIG.check_temp = False
