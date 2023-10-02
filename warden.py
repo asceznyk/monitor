@@ -1197,55 +1197,42 @@ class Color:
   def truecolor_to_256(rgb: Tuple[int, int, int], depth: str="fg") -> str:
     out: str = ""
     pre: str = f'\033[{"38" if depth == "fg" else "48"};5;'
-
     greyscale: Tuple[int, int, int] = ( rgb[0] // 11, rgb[1] // 11, rgb[2] // 11 )
     if greyscale[0] == greyscale[1] == greyscale[2]:
       out = f'{pre}{232 + greyscale[0]}m'
     else:
       out = f'{pre}{round(rgb[0] / 51) * 36 + round(rgb[1] / 51) * 6 + round(rgb[2] / 51) + 16}m'
-
     return out
 
   @staticmethod
-  def escape_color(hexa: str = "", r: int = 0, g: int = 0, b: int = 0, depth: str = "fg") -> str:
+  def escape_hex(hexa: str, dint: int, depth: str) -> str:
+    color: str = ""
+    try:
+      hexa = f'#{hexa[1:]}{hexa[1:]}{hexa[1:]}' if len(hexa) == 3 else hexa
+      color = f'\033[{dint};2;{int(hexa[1:3], base=16)};{int(hexa[3:5], base=16)};{int(hexa[5:7], base=16)}m' if CONFIG.truecolor and not LOW_COLOR else f'{Color.truecolor_to_256(rgb=(int(hexa[1:3], base=16), int(hexa[3:5], base=16), int(hexa[5:7], base=16)), depth=depth)}'
+    except ValueError as e: errlog.exception(f'{e}')
+    return color
+
+  @staticmethod
+  def escape_rgb(r: int, g: int, b: int, dint: int, depth: str) -> str:
+    return f'\033[{dint};2;{r};{g};{b}m' if CONFIG.truecolor and not LOW_COLOR else f'{Color.truecolor_to_256(rgb=(r, g, b), depth=depth)}'
+
+  @classmethod
+  def escape_color(cls, hexa: str = "", r: int = 0, g: int = 0, b: int = 0, depth: str = "fg") -> str:
     """Returns escape sequence to set color
     * accepts either 6 digit hexadecimal hexa="#RRGGBB", 2 digit hexadecimal: hexa="#FF"
     * or decimal RGB: r=0-255, g=0-255, b=0-255
     * depth="fg" or "bg"
     """
     dint: int = 38 if depth == "fg" else 48
-    color: str = ""
-    if hexa:
-      try:
-        if len(hexa) == 3:
-          c = int(hexa[1:], base=16)
-          if CONFIG.truecolor and not LOW_COLOR:
-            color = f'\033[{dint};2;{c};{c};{c}m'
-          else:
-            color = f'{Color.truecolor_to_256(rgb=(c, c, c), depth=depth)}'
-        elif len(hexa) == 7:
-          if CONFIG.truecolor and not LOW_COLOR:
-            color = f'\033[{dint};2;{int(hexa[1:3], base=16)};{int(hexa[3:5], base=16)};{int(hexa[5:7], base=16)}m'
-          else:
-            color = f'{Color.truecolor_to_256(rgb=(int(hexa[1:3], base=16), int(hexa[3:5], base=16), int(hexa[5:7], base=16)), depth=depth)}'
-      except ValueError as e:
-        errlog.exception(f'{e}')
-    else:
-      if CONFIG.truecolor and not LOW_COLOR:
-        color = f'\033[{dint};2;{r};{g};{b}m'
-      else:
-        color = f'{Color.truecolor_to_256(rgb=(r, g, b), depth=depth)}'
+    color: str = cls.escape_hex(hexa, dint, depth) if hexa else cls.escape_rgb(r,g,b, dint, depth)
     return color
 
   @classmethod
-  def fg(cls, *args) -> str:
-    if len(args) > 2: return cls.escape_color(r=args[0], g=args[1], b=args[2], depth="fg")
-    else: return cls.escape_color(hexa=args[0], depth="fg")
+  def fg(cls, *args) -> str: return cls.escape_color(r=args[0], g=args[1], b=args[2], depth="fg") if len(args) > 2 else cls.escape_color(hexa=args[0], depth="fg")
 
   @classmethod
-  def bg(cls, *args) -> str:
-    if len(args) > 2: return cls.escape_color(r=args[0], g=args[1], b=args[2], depth="bg")
-    else: return cls.escape_color(hexa=args[0], depth="bg")
+  def bg(cls, *args) -> str: return cls.escape_color(r=args[0], g=args[1], b=args[2], depth="bg") if len(args) > 2 else cls.escape_color(hexa=args[0], depth="bg")
 
 class Colors:
   '''Standard colors for menus and dialogs'''
