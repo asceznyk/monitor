@@ -235,17 +235,14 @@ if not os.path.isdir(CONFIG_DIR):
     print(f'ERROR!\nNo permission to write to "{CONFIG_DIR}" directory!')
     raise SystemExit(1)
 CONFIG_FILE: str = f'{CONFIG_DIR}/warden.conf'
-THEME_DIR: str = ""
 
-if os.path.isdir(f'{os.path.dirname(__file__)}/warden-themes'):
-  THEME_DIR = f'{os.path.dirname(__file__)}/warden-themes'
-elif os.path.isdir(f'{os.path.dirname(__file__)}/themes'):
-  THEME_DIR = f'{os.path.dirname(__file__)}/themes'
-else:
+THEME_DIR: str = f'{os.path.dirname(__file__)}/themes'
+if not os.path.isdir(THEME_DIR):
   for td in ["/usr/local/", "/usr/", "/snap/warden/current/usr/"]:
     if os.path.isdir(f'{td}share/warden/themes'):
       THEME_DIR = f'{td}share/warden/themes'
       break
+
 USER_THEME_DIR: str = f'{CONFIG_DIR}/themes'
 
 CORES: int = psutil.cpu_count(logical=False) or 1
