@@ -4,6 +4,7 @@ import warden
 from warden import (CORES, SYSTEM, THREADS, Fx, create_box, floating_humanizer,
                     get_cpu_core_mapping, get_cpu_name, units_to_bytes)
 
+
 def test_get_cpu_name():
   assert isinstance(get_cpu_name(), str)
 

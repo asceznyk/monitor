@@ -2,6 +2,7 @@ from warden import Term
 import os
 from unittest import mock
 
+
 def test_empty():
   assert Term.title() == "\033]0;\a"
 

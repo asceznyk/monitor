@@ -364,19 +364,19 @@ class TimeIt:
 
   @classmethod
   def pause(cls, name):
-    if name in cls.timers:
-      cls.paused[name] = time() - cls.timers[name]
-      del cls.timers[name]
+    if not name in cls.timers: return
+    cls.paused[name] = time() - cls.timers[name]
+    del cls.timers[name]
 
   @classmethod
   def stop(cls, name):
-    if name in cls.timers:
-      total: float = time() - cls.timers[name]
-      del cls.timers[name]
-      if name in cls.paused:
-        total += cls.paused[name]
-        del cls.paused[name]
-      errlog.debug(f'{name} completed in {total:.6f} seconds')
+    if not name in cls.timers: return
+    total: float = time() - cls.timers[name]
+    del cls.timers[name]
+    if name in cls.paused:
+      total += cls.paused[name]
+      del cls.paused[name]
+    errlog.debug(f'{name} completed in {total:.6f} seconds')
 
 def timeit_decorator(func):
   def timed(*args, **kw):
@@ -400,12 +400,9 @@ def strtobool(val: str) -> bool:
     val = val.lower()
   except AttributeError:
     raise ValueError(f"invalid type {type(val)} for truth value {val}")
-  if val in ('y', 'yes', 't', 'true', 'on', '1'):
-    return True
-  elif val in ('n', 'no', 'f', 'false', 'off', '0'):
-    return False
-  else:
-    raise ValueError(f"invalid truth value {val}")
+  if val in ('y', 'yes', 't', 'true', 'on', '1'): return True
+  elif val in ('n', 'no', 'f', 'false', 'off', '0'): return False
+  else: raise ValueError(f"invalid truth value {val}")
 
 #? Set up config class and load config ----------------------------------------------------------->
 
@@ -481,13 +478,12 @@ class Config:
   if hasattr(psutil, "sensors_temperatures"):
     try:
       _temps = psutil.sensors_temperatures()
-      if _temps:
-        for _name, _entries in _temps.items():
-          for _num, _entry in enumerate(_entries, 1):
-            if hasattr(_entry, "current"):
-              cpu_sensors.append(f'{_name}:{_num if _entry.label == "" else _entry.label}')
-    except:
-      pass
+      if not _temps: pass
+      for _name, _entries in _temps.items():
+        for _num, _entry in enumerate(_entries, 1):
+          if not hasattr(_entry, "current"): continue
+          cpu_sensors.append(f'{_name}:{_num if _entry.label == "" else _entry.label}')
+    except: pass
 
   changed: bool = False
   recreate: bool = False

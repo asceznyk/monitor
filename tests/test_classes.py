@@ -4,6 +4,7 @@ from warden import Graph, Fx, Meter, Color, Banner
 from warden import Collector, CpuCollector, MemCollector, NetCollector, ProcCollector
 warden.Term.width, warden.Term.height = 80, 25
 
+
 def test_Fx_uncolor():
   assert Fx.uncolor("\x1b[38;2;102;238;142mTEST\x1b[48;2;0;0;0m") == "TEST"
 
