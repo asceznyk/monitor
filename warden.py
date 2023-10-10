@@ -519,14 +519,10 @@ class Config:
     '''Load config from file, set correct types for values and return a dict'''
     new_config: Dict[str,Union[str, int, bool]] = {}
     conf_file: str = ""
-    if os.path.isfile(self.config_file):
-      conf_file = self.config_file
-    elif SYSTEM == "BSD" and os.path.isfile("/usr/local/etc/warden.conf"):
-      conf_file = "/usr/local/etc/warden.conf"
-    elif SYSTEM != "BSD" and os.path.isfile("/etc/warden.conf"):
-      conf_file = "/etc/warden.conf"
-    else:
-      return new_config
+    if os.path.isfile(self.config_file): conf_file = self.config_file
+    elif SYSTEM == "BSD" and os.path.isfile("/usr/local/etc/warden.conf"): conf_file = "/usr/local/etc/warden.conf"
+    elif SYSTEM != "BSD" and os.path.isfile("/etc/warden.conf"): conf_file = "/etc/warden.conf"
+    else: return new_config
     try:
       with open(conf_file, "r") as f:
         for line in f:
@@ -534,24 +530,17 @@ class Config:
           if line.startswith("#? Config"):
             new_config["version"] = line[line.find("v. ") + 3:]
             continue
-          if not '=' in line:
-            continue
+          if not '=' in line: continue
           key, line = line.split('=', maxsplit=1)
-          if not key in self.keys:
-            continue
+          if not key in self.keys: continue
           line = line.strip('"')
           if type(getattr(self, key)) == int:
-            try:
-              new_config[key] = int(line)
-            except ValueError:
-              self.warnings.append(f'Config key "{key}" should be an integer!')
+            try: new_config[key] = int(line)
+            except ValueError: self.warnings.append(f'Config key "{key}" should be an integer!')
           if type(getattr(self, key)) == bool:
-            try:
-              new_config[key] = bool(strtobool(line))
-            except ValueError:
-              self.warnings.append(f'Config key "{key}" can only be True or False!')
-          if type(getattr(self, key)) == str:
-            new_config[key] = str(line)
+            try: new_config[key] = bool(strtobool(line))
+            except ValueError: self.warnings.append(f'Config key "{key}" can only be True or False!')
+          if type(getattr(self, key)) == str: new_config[key] = str(line)
     except Exception as e:
       errlog.exception(str(e))
     if "proc_sorting" in new_config and not new_config["proc_sorting"] in self.sorting_options:
@@ -590,8 +579,7 @@ class Config:
     try:
       with open(self.config_file, "w" if os.path.isfile(self.config_file) else "x") as f:
         f.write(DEFAULT_CONF.substitute(self.conf_dict))
-    except Exception as e:
-      errlog.exception(str(e))
+    except Exception as e: errlog.exception(str(e))
 
 try:
   CONFIG: Config = Config(CONFIG_FILE)
